@@ -88,7 +88,17 @@ public class VehicleDialog {
     	textVehicleName.setText(vehicle.getName());
     	textVehicleTankSize.setText(vehicle.getTankSizeString());
 
-        // define a click listener for the dialog's OK button
+		final EditText textVehicleBrand =
+				(EditText) dialog.findViewById(R.id.textVehicleBrand);
+		final EditText textVehiclePlate =
+				(EditText) dialog.findViewById(R.id.textVehiclePlate);
+		final EditText textVehicleType =
+				(EditText) dialog.findViewById(R.id.textVehicleType);
+		textVehicleBrand.setText(vehicle.getBrand());
+		textVehiclePlate.setText(vehicle.getPlate());
+		textVehicleType.setText(vehicle.getType());
+
+		// define a click listener for the dialog's OK button
         Button buttonOK = (Button)dialog.findViewById(R.id.buttonOK);
         buttonOK.setOnClickListener(new OnClickListener() {
             @Override
@@ -103,8 +113,29 @@ public class VehicleDialog {
             		message = res.getString(R.string.toast_invalid_vehicle_name);
             		Utilities.toast(context,message);
             		return;
-            	} 
-            	
+            	}
+
+				String brand = textVehicleBrand.getText().toString().trim();
+				if (!isValidBrand(brand)) {
+					message = res.getString(R.string.toast_invalid_vehicle_brand);
+					Utilities.toast(context,message);
+					return;
+				}
+
+				String plate = textVehiclePlate.getText().toString().trim();
+				if (!isValidBrand(plate)) {
+					message = res.getString(R.string.toast_invalid_vehicle_plate);
+					Utilities.toast(context,message);
+					return;
+				}
+
+				String type = textVehicleType.getText().toString().trim();
+				if (!isValidBrand(type)) {
+					message = res.getString(R.string.toast_invalid_vehicle_type);
+					Utilities.toast(context,message);
+					return;
+				}
+
             	// validate vehicle tank size
             	String tanksize = textVehicleTankSize.getText().toString().trim();
             	if (!isValidTankSize(tanksize)) {
@@ -116,7 +147,11 @@ public class VehicleDialog {
             	// valid data - notify listener
             	vehicle.setName(name);
             	vehicle.setTankSize(tanksize);
+				vehicle.setBrand(brand);
+				vehicle.setType(type);
+				vehicle.setPlate(plate);
             	listener.onVehicleDialogClosure(id,vehicle);
+
             }
         });
 
@@ -168,6 +203,41 @@ public class VehicleDialog {
 			return false;
 		}
 		
+		return true;
+	}
+
+	private static boolean isValidBrand(String brand) {
+
+		try {
+			Vehicle v = new Vehicle();
+			v.setBrand(brand);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private static boolean isValidPlate(String plate) {
+
+		try {
+			Vehicle v = new Vehicle();
+			v.setPlate(plate);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
+		return true;
+	}
+	private static boolean isValidType(String type) {
+
+		try {
+			Vehicle v = new Vehicle();
+			v.setType(type);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
 		return true;
 	}
 
